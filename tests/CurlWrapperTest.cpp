@@ -24,3 +24,13 @@ TEST(CurlWrapper, postRequestTest)
     ASSERT_EQ(200, response.getCode());
     ASSERT_EQ("{\"response\":\"Success\"}", response.getContent());
 }
+
+TEST(CurlWrapper, postWithSpecificHeaders)
+{
+    Fake::CurlWrapper wrapper;
+    wrapper.setHeaders({"Content-type: application/pdf"});
+    CURLWrapper::Response response = wrapper.sendPost("http://localhost/", "{}");
+    ASSERT_EQ(CURLE_OK, response.getStatus());
+    ASSERT_EQ(200, response.getCode());
+    ASSERT_EQ("{\"response\":\"Wrong content-type header\"}", response.getContent());
+}

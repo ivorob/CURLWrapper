@@ -12,7 +12,8 @@ writeToString(void *data, size_t size, size_t count, void *stream)
 }
 
 CURLWrapper::Client::Client()
-    : curl()
+    : curl(),
+      headers()
 {
     curl_global_init(CURL_GLOBAL_ALL);
 
@@ -23,6 +24,10 @@ CURLWrapper::Client::~Client()
 {
     if (curl != nullptr) {
         curl_easy_cleanup(curl);
+
+        if (this->headers != nullptr) {
+            curl_slist_free_all(this->headers);
+        }
     }
 
     curl_global_cleanup();
@@ -51,6 +56,23 @@ CURLWrapper::Client::sendPost(const std::string& url, const std::string& data)
     }
 
     return {};
+}
+
+void
+CURLWrapper::Client::setHeaders(const Headers& headers)
+{
+    if (this->curl != nullptr) {
+        if (this->headers != nullptr) {
+            curl_slist_free_all(this->headers);
+            this->headers = nullptr;
+        }
+
+        for (const auto& header : headers) {
+            this->headers = curl_slist_append(this->headers, header.c_str());
+        }
+
+        curl_easy_setopt(this->curl, CURLOPT_HTTPHEADER, this->headers);
+    }
 }
 
 CURLWrapper::Response::Response()

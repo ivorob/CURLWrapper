@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <list>
 #include <curl/curl.h>
 
 namespace CURLWrapper {
@@ -21,12 +22,16 @@ private:
 
 class Client {
 public:
+    using Headers = std::list<std::string>;
+public:
     Client();
     virtual ~Client();
 
     virtual Response sendPost(const std::string& url, const std::string& data);
+    virtual void setHeaders(const Headers& headers);
 private:
     CURL *curl;
+    struct curl_slist *headers;
 };
 
 }
