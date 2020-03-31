@@ -45,6 +45,8 @@ CURLWrapper::Client::sendPost(const std::string& url, const std::string& data)
         curl_easy_setopt(this->curl, CURLOPT_WRITEDATA, &content);
         curl_easy_setopt(this->curl, CURLOPT_POST, true);
 
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+
         CURLcode result = curl_easy_perform(this->curl);
         long responseCode = -1;
         if (result == CURLE_OK) {
