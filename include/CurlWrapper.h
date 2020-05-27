@@ -15,9 +15,9 @@ public:
     long getCode() const;
     const std::string& getContent() const;
 private:
-    const CURLcode status;
-    const long code;
-    const std::string content;
+    CURLcode status;
+    long code;
+    std::string content;
 };
 
 class Client {

@@ -16,6 +16,20 @@ TEST(CurlWrapper, responseTest)
     ASSERT_EQ("hello", response1.getContent());
 }
 
+TEST(CurlWrapper, copyResponseTest)
+{
+    CURLWrapper::Response response(CURLE_OK, 200, "hello");
+    CURLWrapper::Response response1 = response;
+    ASSERT_EQ(CURLE_OK, response1.getStatus());
+    ASSERT_EQ(200, response1.getCode());
+    ASSERT_EQ("hello", response1.getContent());
+
+    response1 = CURLWrapper::Response();
+    ASSERT_EQ(CURLE_FAILED_INIT, response1.getStatus());
+    ASSERT_EQ(-1, response1.getCode());
+    ASSERT_EQ("", response1.getContent());
+}
+
 TEST(CurlWrapper, postRequestTest)
 {
     Fake::CurlWrapper wrapper;
