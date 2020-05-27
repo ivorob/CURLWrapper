@@ -34,6 +34,31 @@ CURLWrapper::Client::~Client()
 }
 
 CURLWrapper::Response
+CURLWrapper::Client::sendGet(const std::string& url)
+{
+    if (this->curl != nullptr) {
+        curl_easy_setopt(this->curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(this->curl, CURLOPT_HTTPGET, 1L);
+
+        std::string content;
+        curl_easy_setopt(this->curl, CURLOPT_WRITEFUNCTION, writeToString);
+        curl_easy_setopt(this->curl, CURLOPT_WRITEDATA, &content);
+        curl_easy_setopt(this->curl, CURLOPT_SSL_VERIFYPEER, 0L);
+
+        CURLcode result = curl_easy_perform(this->curl);
+        long responseCode = -1;
+        if (result == CURLE_OK) {
+            curl_easy_getinfo(this->curl, CURLINFO_RESPONSE_CODE, &responseCode);
+        }
+
+        Response response(result, responseCode, content);
+        return response;
+    }
+
+    return {};
+}
+
+CURLWrapper::Response
 CURLWrapper::Client::sendPost(const std::string& url, const std::string& data)
 {
     if (this->curl != nullptr) {
@@ -45,7 +70,7 @@ CURLWrapper::Client::sendPost(const std::string& url, const std::string& data)
         curl_easy_setopt(this->curl, CURLOPT_WRITEDATA, &content);
         curl_easy_setopt(this->curl, CURLOPT_POST, true);
 
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(this->curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
         CURLcode result = curl_easy_perform(this->curl);
         long responseCode = -1;

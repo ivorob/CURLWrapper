@@ -28,6 +28,7 @@ public:
     virtual ~Client();
 
     virtual Response sendPost(const std::string& url, const std::string& data);
+    virtual Response sendGet(const std::string& url);
     virtual void setHeaders(const Headers& headers);
 private:
     CURL *curl;

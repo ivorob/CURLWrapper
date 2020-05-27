@@ -34,3 +34,12 @@ TEST(CurlWrapper, postWithSpecificHeaders)
     ASSERT_EQ(200, response.getCode());
     ASSERT_EQ("{\"response\":\"Wrong content-type header\"}", response.getContent());
 }
+
+TEST(CurlWrapper, getRequestTest)
+{
+    Fake::CurlWrapper wrapper;
+    CURLWrapper::Response response = wrapper.sendGet("http://localhost/");
+    ASSERT_EQ(CURLE_OK, response.getStatus());
+    ASSERT_EQ(200, response.getCode());
+    ASSERT_EQ("<html><body>test</body></html>", response.getContent());
+}

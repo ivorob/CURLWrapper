@@ -12,6 +12,12 @@ Fake::CurlWrapper::sendPost(const std::string& url, const std::string& data)
     return CURLWrapper::Response(CURLE_OK, 200, "{\"response\":\"Success\"}");
 }
 
+CURLWrapper::Response
+Fake::CurlWrapper::sendGet(const std::string& url)
+{
+    return CURLWrapper::Response(CURLE_OK, 200, "<html><body>test</body></html>");
+}
+
 void
 Fake::CurlWrapper::setHeaders(const CURLWrapper::Client::Headers& headers)
 {
